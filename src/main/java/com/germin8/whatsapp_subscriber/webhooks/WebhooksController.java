@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/webhooks")
@@ -24,13 +27,17 @@ public class WebhooksController {
 
     @GetMapping
     public ResponseEntity<String> handleWebhookVerification(
-            @RequestParam("hub.mode") String mode,
-            @RequestParam("hub.challenge") String challenge,
-            @RequestParam("hub.verify_token") String hubVerifyToken) {
+        @RequestParam("hub.mode") String mode,
+        @RequestParam("hub.challenge") String challenge,
+        @RequestParam("hub.verify_token") String hubVerifyToken
+    ) {
+        logger.info("Received a verification request from WhatsApp with mode: {}, challenge: {}, and verify_token: {}", mode, challenge, hubVerifyToken);
 
         if ("subscribe".equals(mode) && verifyToken.equals(hubVerifyToken)) {
+            logger.info("Verification successful");
             return ResponseEntity.ok(challenge);
         } else {
+            logger.error("Verification failed");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
@@ -54,6 +61,11 @@ public class WebhooksController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @GetMapping("/amal")   
+    public String blankRequest() {
+        return "<h1>WhatsApp Subscriber</h1>";
     }
 
 }
