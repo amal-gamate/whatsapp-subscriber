@@ -1,0 +1,10 @@
+server:
+    port: 14003
+
+spring:
+    application:
+        name: whatsapp-subscriber
+
+app:
+    app_secret: 29cfadaaedd70106f6abaf1fbf552481
+    verify_token: u3CJq7Z2SZ
